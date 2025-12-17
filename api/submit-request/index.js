@@ -15,17 +15,17 @@ module.exports = async function (context, req) {
         return;
     }
 
-    // Verify reCAPTCHA v3
+    // Verify reCAPTCHA v3 token (success only – score check temporarily disabled)
     const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${captchaToken}`;
     const verifyResponse = await fetch(verifyUrl);
     const verifyResult = await verifyResponse.json();
 
     context.log(`reCAPTCHA verification result: ${JSON.stringify(verifyResult)}`);
-    context.log(`reCAPTCHA score: ${verifyResult.score || 'N/A'}`);
+    context.log(`reCAPTCHA score: ${verifyResult.score || 'N/A'}`); // Still logged for monitoring
 
-    // Temporary low threshold for testing – raise to 0.5+ once stable
-    if (!verifyResult.success || (verifyResult.score && verifyResult.score < 0.3)) {
-        context.res = { status: 400, body: { error: 'Bot detected' } };
+    // ONLY check if token is valid – ignore score for now
+    if (!verifyResult.success) {
+        context.res = { status: 400, body: { error: 'Invalid reCAPTCHA token' } };
         return;
     }
 
