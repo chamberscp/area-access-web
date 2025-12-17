@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
-const RECAPTCHA_KEY = '6LcahC4sAAAAAESm66Rmu-uo33P66EPG8cf8gzKE';
+const RECAPTCHA_KEY = '6Lcxmy4sAAAAAFNf-2r9_fnfmzaLZsxbIiylEUab';
 
 const FormComponent = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
