@@ -1,64 +1,162 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
-const RECAPTCHA_KEY = '6Lcxmy4sAAAAAFNf-2r9_fnfmzaLZsxbIiylEUab';
+const SITE_KEY = '6LcahC4sAAAAAESm66Rmu-uo33P66EPG8cf8gzKE';
 
-const FormComponent = () => {
+const AccessRequestForm = () => {
   const { executeRecaptcha } = useGoogleReCaptcha();
+
   const [formData, setFormData] = useState({
-    firstName: '', lastName: '', vehicleMake: '', vehicleModel: '',
-    vehicleColor: '', email: '', reason: ''
+    firstName: '',
+    lastName: '',
+    vehicleMake: '',
+    vehicleModel: '',
+    vehicleColor: '',
+    email: '',
+    reason: '',
   });
+
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = useCallback(async (e) => {
-    e.preventDefault();
-    if (!executeRecaptcha) {
-      setMessage('reCAPTCHA not loaded yet.');
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
+      setMessage('');
+      setLoading(true);
 
-    const token = await executeRecaptcha('submit_request');
-    const response = await fetch('/api/submit-request', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, captchaToken: token })
-    });
+      if (!executeRecaptcha) {
+        setMessage('reCAPTCHA is not loaded yet. Please wait a moment and try again.');
+        setLoading(false);
+        return;
+      }
 
-    const result = await response.json();
-    setMessage(result.success ? 'Request submitted successfully!' : result.error || 'Submission failed.');
-    if (result.success) {
-      setFormData({ firstName: '', lastName: '', vehicleMake: '', vehicleModel: '',
-        vehicleColor: '', email: '', reason: '' });
-    }
-  }, [executeRecaptcha, formData]);
+      try {
+        const token = await executeRecaptcha('submit_request');
+
+        const response = await fetch('/api/submit-request', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, captchaToken: token }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          setMessage('Request submitted successfully!');
+          setFormData({
+            firstName: '',
+            lastName: '',
+            vehicleMake: '',
+            vehicleModel: '',
+            vehicleColor: '',
+            email: '',
+            reason: '',
+          });
+        } else {
+          setMessage(result.error || result.message || 'Submission failed. Please try again.');
+        }
+      } catch (err) {
+        setMessage('An error occurred. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [executeRecaptcha, formData]
+  );
 
   return (
-    <div style={{ maxWidth: '600px', margin: '40px auto', padding: '20px', fontFamily: 'Arial' }}>
+    <div style={{ maxWidth: '600px', margin: '40px auto', padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Area Access Request</h1>
       <form onSubmit={handleSubmit}>
-        <input name="firstName" placeholder="First Name *" value={formData.firstName} onChange={handleChange} required /><br/><br/>
-        <input name="lastName" placeholder="Last Name *" value={formData.lastName} onChange={handleChange} required /><br/><br/>
-        <input name="vehicleMake" placeholder="Vehicle Make" value={formData.vehicleMake} onChange={handleChange} /><br/><br/>
-        <input name="vehicleModel" placeholder="Vehicle Model" value={formData.vehicleModel} onChange={handleChange} /><br/><br/>
-        <input name="vehicleColor" placeholder="Vehicle Color" value={formData.vehicleColor} onChange={handleChange} /><br/><br/>
-        <input name="email" type="email" placeholder="Email *" value={formData.email} onChange={handleChange} required /><br/><br/>
-        <textarea name="reason" placeholder="Reason for Access *" rows="5" value={formData.reason} onChange={handleChange} required /><br/><br/>
-        <button type="submit">Submit Request</button>
+        <input
+          name="firstName"
+          type="text"
+          placeholder="First Name *"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <input
+          name="lastName"
+          type="text"
+          placeholder="Last Name *"
+          value={formData.lastName}
+          onChange={handleChange}
+          required
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <input
+          name="vehicleMake"
+          type="text"
+          placeholder="Vehicle Make"
+          value={formData.vehicleMake}
+          onChange={handleChange}
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <input
+          name="vehicleModel"
+          type="text"
+          placeholder="Vehicle Model"
+          value={formData.vehicleModel}
+          onChange={handleChange}
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <input
+          name="vehicleColor"
+          type="text"
+          placeholder="Vehicle Color"
+          value={formData.vehicleColor}
+          onChange={handleChange}
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email *"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <textarea
+          name="reason"
+          placeholder="Reason for Access *"
+          rows="5"
+          value={formData.reason}
+          onChange={handleChange}
+          required
+          style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
+        />
+        <br />
+        <button type="submit" disabled={loading} style={{ padding: '10px 20px', fontSize: '16px' }}>
+          {loading ? 'Submitting...' : 'Submit Request'}
+        </button>
       </form>
-      {message && <p style={{ marginTop: '20px', fontWeight: 'bold' }}>{message}</p>}
+      {message && (
+        <p style={{ marginTop: '20px', fontWeight: 'bold', color: message.includes('success') ? 'green' : 'red' }}>
+          {message}
+        </p>
+      )}
     </div>
   );
 };
 
 function App() {
   return (
-    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
-      <FormComponent />
+    <GoogleReCaptchaProvider reCaptchaKey={SITE_KEY}>
+      <AccessRequestForm />
     </GoogleReCaptchaProvider>
   );
 }
