@@ -16,18 +16,18 @@ module.exports = async function (context, req) {
     }
 
     // Verify reCAPTCHA v3
-    //const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${captchaToken}`;
-    //const verifyResponse = await fetch(verifyUrl);
-    //const verifyResult = await verifyResponse.json();
+    const verifyUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${captchaToken}`;
+    const verifyResponse = await fetch(verifyUrl);
+    const verifyResult = await verifyResponse.json();
 
-    //context.log(`reCAPTCHA verification result: ${JSON.stringify(verifyResult)}`);
-    //context.log(`reCAPTCHA score: ${verifyResult.score || 'N/A'}`);
+    context.log(`reCAPTCHA verification result: ${JSON.stringify(verifyResult)}`);
+    context.log(`reCAPTCHA score: ${verifyResult.score || 'N/A'}`);
 
     // Temporary low threshold for testing – raise to 0.5+ once stable
-    //if (!verifyResult.success || (verifyResult.score && verifyResult.score < 0.1)) {
-    //    context.res = { status: 400, body: { error: 'Bot detected' } };
-    //    return;
-    //}
+    if (!verifyResult.success || (verifyResult.score && verifyResult.score < 0.1)) {
+        context.res = { status: 400, body: { error: 'Bot detected' } };
+        return;
+    }
 
     const { firstName, lastName, vehicleMake, vehicleModel, vehicleColor, email, reason } = body;
 
