@@ -64,7 +64,11 @@ const AccessRequestForm = () => {
   return (
     <div style={{ maxWidth: '800px', margin: '40px auto', padding: '30px', background: '#fff', border: '1px solid #C8102E', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', fontFamily: 'Arial, sans-serif' }}>
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <img src="https://www.marines.mil/Portals/_default/Skins/USMC/images/USMC_EGA.png" alt="U.S. Marine Corps Eagle, Globe, and Anchor" style={{ height: '120px' }} />
+        <img 
+          src="https://api.dvidshub.net/api/images/organization/MCIEAST/logo" 
+          alt="Marine Corps Installations East Official Seal" 
+          style={{ height: '150px', marginBottom: '20px' }}
+        />
         <h1 style={{ color: '#C8102E', margin: '20px 0 10px' }}>Marine Corps Installations East</h1>
         <h2 style={{ color: '#333', margin: '0' }}>Restricted Area Access Request</h2>
       </div>
