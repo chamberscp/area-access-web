@@ -12,7 +12,7 @@ module.exports = async function (context, req) {
     // Verify reCAPTCHA
     const verify = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${recaptchaSecret}&response=${captchaToken}`);
     const verifyResult = await verify.json();
-    if (!verifyResult.success || verifyResult.score < 0.5) {
+    if (!verifyResult.success || verifyResult.score < 0.3) {
         context.res = { status: 400, body: { error: 'Bot detected' } };
         return;
     }
