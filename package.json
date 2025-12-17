@@ -9,6 +9,7 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-google-recaptcha-v3": "^1.11.0",
     "react-scripts": "5.0.1",
     "reaptcha": "^1.12.1"
   },
