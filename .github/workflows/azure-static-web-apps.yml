@@ -3,7 +3,7 @@ name: Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - master
+      - master   # Or main if your branch is main
   pull_request:
     types: [opened, synchronize, reopened, closed]
 
@@ -14,7 +14,21 @@ jobs:
     name: Build and Deploy
     steps:
       - uses: actions/checkout@v4
-      - name: Build And Deploy
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'   # Matches modern CRA
+
+      - name: Install dependencies
+        run: npm ci   # Cleaner than npm install
+
+      - name: Build app
+        run: npm run build
+        env:
+          CI: false   # Key: Treats warnings as warnings (not errors)
+
+      - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
