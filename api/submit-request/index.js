@@ -24,7 +24,7 @@ module.exports = async function (context, req) {
     context.log(`reCAPTCHA score: ${verifyResult.score || 'N/A'}`);
 
     // Temporary low threshold for testing – raise to 0.5+ once stable
-    if (!verifyResult.success || (verifyResult.score && verifyResult.score < 0.5)) {
+    if (!verifyResult.success || (verifyResult.score && verifyResult.score < 0.3)) {
         context.res = { status: 400, body: { error: 'Bot detected' } };
         return;
     }
