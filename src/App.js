@@ -30,7 +30,7 @@ const AccessRequestForm = () => {
       setLoading(true);
 
       if (!executeRecaptcha) {
-        setMessage('reCAPTCHA is not loaded yet. Please wait a moment and try again.');
+        setMessage('reCAPTCHA is not loaded. Please wait and try again.');
         setLoading(false);
         return;
       }
@@ -41,7 +41,10 @@ const AccessRequestForm = () => {
         const response = await fetch('/api/submit-request', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ...formData, captchaToken: token }),
+          body: JSON.stringify({
+            ...formData,
+            captchaToken: token,
+          }),
         });
 
         const result = await response.json();
@@ -58,10 +61,10 @@ const AccessRequestForm = () => {
             reason: '',
           });
         } else {
-          setMessage(result.error || result.message || 'Submission failed. Please try again.');
+          setMessage(result.error || result.message || 'Submission failed.');
         }
       } catch (err) {
-        setMessage('An error occurred. Please try again later.');
+        setMessage('Network error. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -82,7 +85,6 @@ const AccessRequestForm = () => {
           required
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
         <input
           name="lastName"
           type="text"
@@ -92,7 +94,6 @@ const AccessRequestForm = () => {
           required
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
         <input
           name="vehicleMake"
           type="text"
@@ -101,7 +102,6 @@ const AccessRequestForm = () => {
           onChange={handleChange}
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
         <input
           name="vehicleModel"
           type="text"
@@ -110,7 +110,6 @@ const AccessRequestForm = () => {
           onChange={handleChange}
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
         <input
           name="vehicleColor"
           type="text"
@@ -119,7 +118,6 @@ const AccessRequestForm = () => {
           onChange={handleChange}
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
         <input
           name="email"
           type="email"
@@ -129,7 +127,6 @@ const AccessRequestForm = () => {
           required
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
         <textarea
           name="reason"
           placeholder="Reason for Access *"
@@ -139,8 +136,7 @@ const AccessRequestForm = () => {
           required
           style={{ width: '100%', padding: '10px', marginBottom: '10px' }}
         />
-        <br />
-        <button type="submit" disabled={loading} style={{ padding: '10px 20px', fontSize: '16px' }}>
+        <button type="submit" disabled={loading} style={{ padding: '12px 24px', fontSize: '16px' }}>
           {loading ? 'Submitting...' : 'Submit Request'}
         </button>
       </form>
