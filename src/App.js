@@ -1,50 +1,41 @@
-import React, { useState } from 'react';
-import ReCAPTCHA from 'reaptcha';
+import React, { useState, useCallback } from 'react';
+import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 const RECAPTCHA_KEY = '6LcahC4sAAAAAESm66Rmu-uo33P66EPG8cf8gzKE';
 
-function App() {
+const FormComponent = () => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    vehicleMake: '',
-    vehicleModel: '',
-    vehicleColor: '',
-    email: '',
-    reason: ''
+    firstName: '', lastName: '', vehicleMake: '', vehicleModel: '',
+    vehicleColor: '', email: '', reason: ''
   });
   const [message, setMessage] = useState('');
-  const [captchaToken, setCaptchaToken] = useState(null);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const onVerify = (token) => {
-    setCaptchaToken(token);
-  };
-
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = useCallback(async (e) => {
     e.preventDefault();
-    if (!captchaToken) {
-      setMessage('Please complete the reCAPTCHA.');
+    if (!executeRecaptcha) {
+      setMessage('reCAPTCHA not loaded yet.');
       return;
     }
 
+    const token = await executeRecaptcha('submit_request');
     const response = await fetch('/api/submit-request', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, captchaToken })
+      body: JSON.stringify({ ...formData, captchaToken: token })
     });
 
     const result = await response.json();
     setMessage(result.success ? 'Request submitted successfully!' : result.error || 'Submission failed.');
-    if (result.success) setFormData({
-      firstName: '', lastName: '', vehicleMake: '', vehicleModel: '',
-      vehicleColor: '', email: '', reason: ''
-    });
-  };
+    if (result.success) {
+      setFormData({ firstName: '', lastName: '', vehicleMake: '', vehicleModel: '',
+        vehicleColor: '', email: '', reason: '' });
+    }
+  }, [executeRecaptcha, formData]);
 
   return (
     <div style={{ maxWidth: '600px', margin: '40px auto', padding: '20px', fontFamily: 'Arial' }}>
@@ -57,13 +48,18 @@ function App() {
         <input name="vehicleColor" placeholder="Vehicle Color" value={formData.vehicleColor} onChange={handleChange} /><br/><br/>
         <input name="email" type="email" placeholder="Email *" value={formData.email} onChange={handleChange} required /><br/><br/>
         <textarea name="reason" placeholder="Reason for Access *" rows="5" value={formData.reason} onChange={handleChange} required /><br/><br/>
-        
-        <ReCAPTCHA sitekey={RECAPTCHA_KEY} onVerify={onVerify} />
-        <br/>
         <button type="submit">Submit Request</button>
       </form>
       {message && <p style={{ marginTop: '20px', fontWeight: 'bold' }}>{message}</p>}
     </div>
+  );
+};
+
+function App() {
+  return (
+    <GoogleReCaptchaProvider reCaptchaKey={RECAPTCHA_KEY}>
+      <FormComponent />
+    </GoogleReCaptchaProvider>
   );
 }
 
