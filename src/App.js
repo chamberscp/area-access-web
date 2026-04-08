@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { GoogleReCaptchaProvider, useGoogleReCaptcha } from 'react-google-recaptcha-v3';
+import './App.css';
 
 const SITE_KEY = '6LeeyS4sAAAAAO8sYkIOvR_BpzrW4koXSCnjwtsl';
 
@@ -48,7 +49,15 @@ const AccessRequestForm = () => {
 
         if (response.ok && result.success) {
           setMessage('Request submitted successfully!');
-          setFormData({ firstName: '', lastName: '', vehicleMake: '', vehicleModel: '', vehicleColor: '', email: '', reason: '' });
+          setFormData({
+            firstName: '',
+            lastName: '',
+            vehicleMake: '',
+            vehicleModel: '',
+            vehicleColor: '',
+            email: '',
+            reason: '',
+          });
         } else {
           setMessage(result.error || result.message || 'Submission failed.');
         }
@@ -62,38 +71,96 @@ const AccessRequestForm = () => {
   );
 
   return (
-    <div style={{ maxWidth: '800px', margin: '40px auto', padding: '30px', background: '#fff', border: '1px solid #C8102E', borderRadius: '8px', boxShadow: '0 4px 8px rgba(0,0,0,0.1)', fontFamily: 'Arial, sans-serif' }}>
-      <div style={{ textAlign: 'center', marginBottom: '30px' }}>
-        <img 
-          src="https://api.dvidshub.net/api/images/organization/MCIEAST/logo" 
-          alt="Marine Corps Installations East Official Seal" 
-          style={{ height: '150px', marginBottom: '20px' }}
+    <div className="form-container">
+
+      <div className="form-header">
+        <img
+          src="https://api.dvidshub.net/api/images/organization/MCIEAST/logo"
+          alt="Marine Corps Installations East Official Seal"
+          className="form-logo"
         />
-        <h1 style={{ color: '#C8102E', margin: '20px 0 10px' }}>Marine Corps Installations East</h1>
-        <h2 style={{ color: '#333', margin: '0' }}>Restricted Area Access Request</h2>
+        <h1 className="form-title">Marine Corps Installations East</h1>
+        <h2 className="form-subtitle">Restricted Area Access Request</h2>
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* Form fields same as before */}
-        <input name="firstName" type="text" placeholder="First Name *" value={formData.firstName} onChange={handleChange} required style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
-        <input name="lastName" type="text" placeholder="Last Name *" value={formData.lastName} onChange={handleChange} required style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
-        <input name="vehicleMake" type="text" placeholder="Vehicle Make" value={formData.vehicleMake} onChange={handleChange} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
-        <input name="vehicleModel" type="text" placeholder="Vehicle Model" value={formData.vehicleModel} onChange={handleChange} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
-        <input name="vehicleColor" type="text" placeholder="Vehicle Color" value={formData.vehicleColor} onChange={handleChange} style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
-        <input name="email" type="email" placeholder="Email *" value={formData.email} onChange={handleChange} required style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
-        <textarea name="reason" placeholder="Reason for Access *" rows="5" value={formData.reason} onChange={handleChange} required style={{ width: '100%', padding: '10px', marginBottom: '10px', border: '1px solid #ccc', borderRadius: '4px' }} /><br/>
+        <input
+          name="firstName"
+          type="text"
+          placeholder="First Name *"
+          value={formData.firstName}
+          onChange={handleChange}
+          required
+          className="form-input"
+        />
+        <input
+          name="lastName"
+          type="text"
+          placeholder="Last Name *"
+          value={formData.lastName}
+          onChange={handleChange}
+          required
+          className="form-input"
+        />
+        <input
+          name="vehicleMake"
+          type="text"
+          placeholder="Vehicle Make"
+          value={formData.vehicleMake}
+          onChange={handleChange}
+          className="form-input"
+        />
+        <input
+          name="vehicleModel"
+          type="text"
+          placeholder="Vehicle Model"
+          value={formData.vehicleModel}
+          onChange={handleChange}
+          className="form-input"
+        />
+        <input
+          name="vehicleColor"
+          type="text"
+          placeholder="Vehicle Color"
+          value={formData.vehicleColor}
+          onChange={handleChange}
+          className="form-input"
+        />
+        <input
+          name="email"
+          type="email"
+          placeholder="Email *"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          className="form-input"
+        />
+        <textarea
+          name="reason"
+          placeholder="Reason for Access *"
+          rows="5"
+          value={formData.reason}
+          onChange={handleChange}
+          required
+          className="form-textarea"
+        />
 
-        <button type="submit" disabled={loading} style={{ padding: '12px 30px', background: '#C8102E', color: '#FFB81C', border: 'none', borderRadius: '4px', fontSize: '16px', cursor: 'pointer' }}>
+        <button type="submit" disabled={loading} className="form-button">
           {loading ? 'Submitting...' : 'Submit Request'}
         </button>
       </form>
 
-      {message && <p style={{ marginTop: '20px', fontWeight: 'bold', color: message.includes('success') ? 'green' : 'red' }}>{message}</p>}
+      {message && (
+        <p className={`form-message ${message.includes('success') ? 'form-message--success' : 'form-message--error'}`}>
+          {message}
+        </p>
+      )}
 
-      <div style={{ textAlign: 'center', marginTop: '40px', fontSize: '12px', color: '#666' }}>
-        Official U.S. Marine Corps Restricted Area Access Form<br/>
+      <div className="form-footer">
+        Official U.S. Marine Corps Restricted Area Access Form<br />
         For questions, contact your unit security officer.
       </div>
+
     </div>
   );
 };
