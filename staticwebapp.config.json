@@ -1,0 +1,11 @@
+{
+  "globalHeaders": {
+    "Strict-Transport-Security": "max-age=31536000; includeSubDomains",
+    "X-Frame-Options": "SAMEORIGIN",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "Permissions-Policy": "geolocation=(), microphone=(), camera=(), payment=(), usb=()",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.gstatic.com; frame-src https://www.google.com; connect-src 'self' https://black-stone-07ade9b0f.3.azurestaticapps.net; font-src 'self';",
+    "Access-Control-Allow-Origin": "https://black-stone-07ade9b0f.3.azurestaticapps.net"
+  }
+}
