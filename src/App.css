@@ -1,0 +1,92 @@
+/* ── Form Container ─────────────────────────────────────────────────────── */
+.form-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border: 1px solid #C8102E;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: Arial, sans-serif;
+}
+
+/* ── Header / Logo Block ─────────────────────────────────────────────────── */
+.form-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.form-logo {
+  height: 150px;
+  margin-bottom: 20px;
+}
+
+.form-title {
+  color: #C8102E;
+  margin: 20px 0 10px;
+}
+
+.form-subtitle {
+  color: #333333;
+  margin: 0;
+}
+
+/* ── Form Fields ─────────────────────────────────────────────────────────── */
+.form-input,
+.form-textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.form-textarea {
+  resize: vertical;
+}
+
+/* ── Submit Button ───────────────────────────────────────────────────────── */
+.form-button {
+  padding: 12px 30px;
+  background: #C8102E;
+  color: #FFB81C;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  font-family: Arial, sans-serif;
+}
+
+.form-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form-button:hover:not(:disabled) {
+  background: #a50d26;
+}
+
+/* ── Status Message ──────────────────────────────────────────────────────── */
+.form-message {
+  margin-top: 20px;
+  font-weight: bold;
+}
+
+.form-message--success {
+  color: green;
+}
+
+.form-message--error {
+  color: red;
+}
+
+/* ── Footer Note ─────────────────────────────────────────────────────────── */
+.form-footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 12px;
+  color: #666666;
+}
